@@ -31,10 +31,10 @@ let Reflecting = Class.create(Sprite, {
 
     this.judgeEntity.moveTo(this.x+this.width/4, this.y+this.height/4);
 
-    if( this.x < SAFE_X || SAFE_X+PND_X-this.width < this.x ) {
+    if(this.judgeEntity.x < SAFE_X || SAFE_X+PND_X-this.judgeEntity.width < this.judgeEntity.x) {
       this.speedx *= -1;
     }
-    if( this.y < 0 || PND_Y-this.height < this.y ) {
+    if(this.judgeEntity.y < 0 || PND_Y-this.judgeEntity.height < this.judgeEntity.y) {
       this.speedy *= -1;
     }
   }

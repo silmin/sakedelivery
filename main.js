@@ -42,10 +42,18 @@ window.onload = function() {
       core.replaceScene(scene[RESULT]);
     });
 
-    let playerSprite = new Player(50, 50, core);
+    let leftWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
+    leftWallSprite.moveTo(0, 0);
+    scene[GAME].addChild(leftWallSprite);
+
+    let rightWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
+    rightWallSprite.moveTo(SAFE_X+PND_X, SAFE_Y);
+    scene[GAME].addChild(rightWallSprite);
+
+    let playerSprite = new Player(200, 200, core, leftWallSprite, rightWallSprite);
     scene[GAME].addChild(playerSprite);
 
-    let pandySprite = new Reflecting(core, scene, playerSprite);
+    let pandySprite = new Reflecting();
     pandySprite.addEventListener('enterframe', function() {
       if(pandySprite.judgeEntity.intersect(playerSprite)){
         core.replaceScene(scene[RESULT]);
@@ -53,17 +61,6 @@ window.onload = function() {
     });
     scene[GAME].addChild(pandySprite);
     scene[GAME].addChild(pandySprite.judgeEntity);
-
-
-    let leftWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
-    leftWallSprite.moveTo(0, 0);
-    scene[GAME].addChild(leftWallSprite);
-    let rightWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
-    rightWallSprite.moveTo(SAFE_X+PND_X, SAFE_Y);
-    scene[GAME].addChild(rightWallSprite);
-
-    
-
 
     let resultLabel = new Label();
     resultLabel.text = "result";
