@@ -42,15 +42,28 @@ window.onload = function() {
       core.replaceScene(scene[RESULT]);
     });
 
+    let playerSprite = new Player(50, 50, core);
+    scene[GAME].addChild(playerSprite);
 
-    let player = new playerSprite(50, 50, core);
-    scene[GAME].addChild(player);
+    let pandySprite = new Reflecting(core, scene, playerSprite);
+    pandySprite.addEventListener('enterframe', function() {
+      if(pandySprite.judgeEntity.intersect(playerSprite)){
+        core.replaceScene(scene[RESULT]);
+      }
+    });
+    scene[GAME].addChild(pandySprite);
+    scene[GAME].addChild(pandySprite.judgeEntity);
 
-    let pandy = new reflectingSprite();
-    console.log(pandy.width);
-    console.log(pandy.speedx);
-    console.log(pandy.speedy);
-    scene[GAME].addChild(pandy);
+
+    let leftWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
+    leftWallSprite.moveTo(0, 0);
+    scene[GAME].addChild(leftWallSprite);
+    let rightWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
+    rightWallSprite.moveTo(SAFE_X+PND_X, SAFE_Y);
+    scene[GAME].addChild(rightWallSprite);
+
+    
+
 
     let resultLabel = new Label();
     resultLabel.text = "result";

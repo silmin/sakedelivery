@@ -1,6 +1,6 @@
 enchant();
 
-let playerSprite = Class.create(Sprite, {
+let Player = Class.create(Sprite, {
   initialize: function(x, y, core) {
     this.core = core;
     this.moveTo(x, y);
