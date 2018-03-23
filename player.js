@@ -12,6 +12,8 @@ let Player = Class.create(Sprite, {
     this.nx = this.x;
     this.ny = this.y;
     this.speed = 3;
+
+    this.sake = false;
   },
 
   onenterframe: function() {
@@ -28,12 +30,22 @@ let Player = Class.create(Sprite, {
       this.x += this.speed;
     }
 
-    if(this.intersect(this.w1) || this.intersect(this.w2)) {
+    if(this.intersect(this.w1) || this.intersect(this.w2) ||
+       this.x < 0 || SIZE_X < this.x+this.width ||
+       this.y < 0 || SIZE_Y < this.y+this.height) {
       this.x = this.bx;
       this.y = this.by;
     } else {
       this.bx = this.x;
       this.by = this.y;
     }
+  },
+
+  getSake: function() {
+    this.sake = true;
+  },
+
+  giveSake: function() {
+    this.sake = false;
   }
 });
