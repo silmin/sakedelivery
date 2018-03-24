@@ -5,13 +5,11 @@ let Player = Class.create(Sprite, {
     this.core = core;
     this.w1 = w1;
     this.w2 = w2;
-    this.width = 50;
-    this.height = 50;
-    Sprite.call(this, this.width, this.height);
+    Sprite.call(this, 50, 50);
     this.moveTo(x, y);
     this.nx = this.x;
     this.ny = this.y;
-    this.speed = 3;
+    this.speed = 5;
 
     this.sake = false;
   },

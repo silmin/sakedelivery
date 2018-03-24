@@ -1,11 +1,22 @@
 enchant();
 
+const ASSETS = [
+  './img/sake.png',
+  './img/hert.png',
+  './img/sakeIcon.png',
+  './img/speedup.png',
+  './img/pandy.png',
+  './img/station.png',
+  './img/chanmari.png',
+  './img/wall.png',
+  './img/wall2.png'
+];
+
 window.onload = function() {
   var core = new Core(SIZE_X, SIZE_Y);
   core.fps = FPS;
 
-  core.preload('./img/sake.png');
-  core.preload('./img/hert.png');
+  core.preload(ASSETS);
 
   core.onload = function() {
     let scene = new Array();
@@ -42,24 +53,46 @@ window.onload = function() {
     gameLabel.moveTo(0, 0);
     scene[GAME].addChild(gameLabel);
 
+    let backWall = new Sprite(SIZE_X, SIZE_Y);
+    backWall.image = core.assets['./img/wall.png'];
+    backWall.moveTo(0, 0);
+    backWall.opacity = 0.3;
+    scene[GAME].addChild(backWall);
+
     let leftWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
+    leftWallSprite.image = core.assets['./img/wall2.png'];
     leftWallSprite.moveTo(0, 0);
     scene[GAME].addChild(leftWallSprite);
 
     let rightWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
+    rightWallSprite.image = core.assets['./img/wall2.png'];
     rightWallSprite.moveTo(SAFE_X+PND_X, SAFE_Y);
     scene[GAME].addChild(rightWallSprite);
-
-    let playerSprite = new Player(200, 200, core, leftWallSprite, rightWallSprite);
-    scene[GAME].addChild(playerSprite);
-
+    
     let stationSprite = new Sprite(SAFE_X, SAFE_Y);
+    stationSprite.image = core.assets['./img/station.png'];
     stationSprite.moveTo(0, SIZE_Y-SAFE_Y);
     scene[GAME].addChild(stationSprite);
     
     let chanmariSprite = new Sprite(SAFE_X, SAFE_Y);
+    chanmariSprite.image = core.assets['./img/chanmari.png'];
     chanmariSprite.moveTo(SIZE_X-SAFE_X, 0);
     scene[GAME].addChild(chanmariSprite);
+
+    let playerSprite = new Player(SAFE_X+100, SIZE_Y-70, core, leftWallSprite, rightWallSprite);
+    scene[GAME].addChild(playerSprite);
+
+    let sakeIcon = new Sprite(30, 30);
+    sakeIcon.moveTo(playerSprite.x+30, playerSprite.y-10);
+    sakeIcon.image = core.assets['./img/sakeIcon.png'];
+    sakeIcon.visible = false;
+    scene[GAME].addChild(sakeIcon);
+
+    let speedIcon = new Sprite(30, 30);
+    speedIcon.moveTo(playerSprite.x-10, playerSprite.y-10);
+    speedIcon.image = core.assets['./img/speedup.png'];
+    speedIcon.visible = false;
+    scene[GAME].addChild(speedIcon);
 
     let cntBackSprite = new Sprite(SAFE_X, SAFE_Y);
     cntBackSprite.moveTo(SIZE_X-SAFE_X, SAFE_Y);
@@ -96,8 +129,13 @@ window.onload = function() {
     let mood = 50;
     let sakeGauge = FPS * 20;
 
+    let itemInterval = FPS * 30;
+    let itemHold = FPS * 10;
+    let itemFrame;
+
+
     scene[GAME].addEventListener('enterframe', function() {
-      
+
       if(0 < sakeGauge) {
         sakeGauge--;
       } else if(core.frame % FPS === 0 && 1 < mood) {
@@ -106,17 +144,37 @@ window.onload = function() {
       gaugeEntity.height = Math.floor(-500 * (sakeGauge / (FPS * 20)));
       moodLabel.text = '' + mood;
 
-
-      if(playerSprite.intersect(stationSprite)){
-        playerSprite.getSake();
-        playerSprite.debugColor = 'blue';
+      if(core.frame % itemInterval === 0) {
+        let itemSprite = new speedItem();
+        itemSprite.image = core.assets['./img/speedup.png'];
+        itemSprite.addEventListener('enterframe', function() {
+          if(itemSprite.intersect(playerSprite)) {
+            itemFrame = core.frame;
+            playerSprite.speed = 8;
+            speedIcon.visible = true;
+            scene[GAME].removeChild(itemSprite);
+            itemSprite = null;
+          }
+        });
+        scene[GAME].addChild(itemSprite);
       }
-      if(playerSprite.intersect(chanmariSprite) && playerSprite.sake ){
+
+      if(core.frame-itemFrame === itemHold) {
+        playerSprite.speed = 5;
+        speedIcon.visible = false;
+      }
+
+      if(playerSprite.intersect(stationSprite)) {
+        playerSprite.getSake();
+        sakeIcon.visible = true;
+      }
+      if(playerSprite.intersect(chanmariSprite) && playerSprite.sake ) {
         playerSprite.giveSake();
-        playerSprite.debugColor = 'red';
+        sakeIcon.visible = false;
         let pandySprite = new Reflecting();
+        pandySprite.image = core.assets['./img/pandy.png'];
         pandySprite.addEventListener('enterframe', function() {
-          if(pandySprite.judgeEntity.intersect(playerSprite)){
+          if(pandySprite.judgeEntity.intersect(playerSprite)) {
             core.replaceScene(scene[RESULT]);
           }
         });
@@ -129,8 +187,12 @@ window.onload = function() {
         if( FPS * 20 < sakeGauge ) sakeGauge = FPS * 20;
 
         cntLabel.text = '' + sakeCnt;
+
+        cntLabel.moveTo(SIZE_X-SAFE_X+(SAFE_X-cntLabel._boundWidth)/2, SAFE_Y+40);
       }
-      //console.log(sakeCnt, mood, sakeGauge);
+      speedIcon.moveTo(playerSprite.x-10, playerSprite.y-10);
+      moodLabel.moveTo(SIZE_X-SAFE_X+(SAFE_X-moodLabel._boundWidth)/2, SAFE_Y*2+40);
+      sakeIcon.moveTo(playerSprite.x+30, playerSprite.y-10);
     });
 
     let resultLabel = new Label();
@@ -147,10 +209,9 @@ window.onload = function() {
     scene[RESULT].addChild(scoreLabel);
 
     scene[RESULT].addEventListener('enter', function() {
-        scoreLabel.text = '' + ((sakeCnt * sakeCnt) * mood);
-        console.log(sakeCnt, mood);
+      scoreLabel.text = '' + (sakeCnt*mood);
+      console.log(sakeCnt, mood);
     });
-
   };
   //core.start();
   core.debug();
