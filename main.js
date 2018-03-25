@@ -14,7 +14,13 @@ const ASSETS = [
   './img/station.png',
   './img/chanmari.png',
   './img/wall.png',
-  './img/wall2.png'
+  './img/wall2.png',
+  './sound/start.mp3',
+  './sound/title.mp3',
+  './sound/game.mp3',
+  './sound/speedup.mp3',
+  './sound/get.mp3',
+  './sound/drink.mp3',
 ];
 
 window.onload = function() {
@@ -24,15 +30,33 @@ window.onload = function() {
   core.preload(ASSETS);
 
   core.onload = function() {
+
+    let titleBgm = core.assets['./sound/title.mp3'];
+    let startSound = core.assets['./sound/start.mp3'];
+    let gameBgm = core.assets['./sound/game.mp3'];
+    let speedSound = core.assets['./sound/speedup.mp3'];
+    let getSound = core.assets['./sound/get.mp3'];
+    let drinkSound = core.assets['./sound/drink.mp3'];
+
     let scene = new Array();
     for(let i = 1; i <= SCENE; ++i) {
       scene[i] = new Scene();
     }
     scene[TOP].addEventListener('touchstart', function() {
+      startSound.play();
+      startSound.volume -= 0.8;
+
       core.replaceScene(scene[DESCRIPTION]);
     });
 
+    scene[TOP].addEventListener('enter', function() {
+      titleBgm.play();
+      titleBgm.volume -= 0.8;
+      titleBgm._element.loop = true;
+    });
+
     scene[TOP].backgroundColor = '#f5deb3';
+    scene[GAME].backgroundColor = '#f5deb3';
     scene[RESULT].backgroundColor = '#f5deb3';
 
     let titleSprite = new Sprite(600, 200);
@@ -50,19 +74,21 @@ window.onload = function() {
     });
 
     core.pushScene(scene[TOP]);
+    
 
     let descSprite = new Sprite(SIZE_X, SIZE_Y);
     descSprite.moveTo(0, 0);
     descSprite.image = core.assets['./img/description.png'];
     scene[DESCRIPTION].addChild(descSprite);
     scene[DESCRIPTION].addEventListener('touchstart', function() {
+      startSound.stop();
       core.replaceScene(scene[GAME]);
     });
 
     let backWall = new Sprite(SIZE_X, SIZE_Y);
     backWall.image = core.assets['./img/wall.png'];
     backWall.moveTo(0, 0);
-    backWall.opacity = 0.3;
+    backWall.opacity = 0.2;
     scene[GAME].addChild(backWall);
 
     let leftWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
@@ -140,6 +166,13 @@ window.onload = function() {
     let itemHold = FPS * 10;
     let itemFrame;
 
+      
+    scene[GAME].addEventListener('enter', function() {
+      titleBgm.stop();
+      gameBgm.play();
+      gameBgm.volume -= 0.8;
+      gameBgm._element.loop = true;
+    });
 
     scene[GAME].addEventListener('enterframe', function() {
 
@@ -156,6 +189,8 @@ window.onload = function() {
         itemSprite.image = core.assets['./img/speedup.png'];
         itemSprite.addEventListener('enterframe', function() {
           if(itemSprite.intersect(playerSprite)) {
+            speedSound.play();
+            speedSound.volume -= 0.8;
             itemFrame = core.frame;
             playerSprite.speed = 8;
             speedIcon.visible = true;
@@ -172,10 +207,12 @@ window.onload = function() {
       }
 
       if(playerSprite.intersect(stationSprite)) {
+        if(!playerSprite.sake) getSound.play();
         playerSprite.getSake();
         sakeIcon.visible = true;
       }
       if(playerSprite.intersect(chanmariSprite) && playerSprite.sake ) {
+        drinkSound.play();
         playerSprite.giveSake();
         sakeIcon.visible = false;
         let pandySprite = new Reflecting();
@@ -241,6 +278,9 @@ window.onload = function() {
       location.href = tweetUrl + EUC(message);
     });
     scene[RESULT].addEventListener('enter', function() {
+      gameBgm.stop();
+      titleBgm.play();
+      titleBgm._element.loop = true;
       scene[RESULT].addChild(tweetLabel);
       scene[RESULT].addChild(returnLabel);
       scene[RESULT].addChild(myInfo);
