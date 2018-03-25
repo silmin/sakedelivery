@@ -113,6 +113,7 @@ window.onload = function() {
     let playerSprite = new Player(SAFE_X+100, SIZE_Y-70, core, leftWallSprite, rightWallSprite);
     playerSprite.image = core.assets['./img/player.png'];
     scene[GAME].addChild(playerSprite);
+    scene[GAME].addChild(playerSprite.judgeSprite);
 
     let sakeIcon = new Sprite(30, 30);
     sakeIcon.moveTo(playerSprite.x+30, playerSprite.y-10);
@@ -186,7 +187,7 @@ window.onload = function() {
         let itemSprite = new speedItem();
         itemSprite.image = core.assets['./img/speedup.png'];
         itemSprite.addEventListener('enterframe', function() {
-          if(itemSprite.intersect(playerSprite)) {
+          if(itemSprite.intersect(playerSprite.judgeSprite)) {
             speedSound.play();
             speedSound.volume -= 0.8;
             itemFrame = core.frame;
@@ -204,19 +205,19 @@ window.onload = function() {
         speedIcon.visible = false;
       }
 
-      if(playerSprite.intersect(stationSprite)) {
+      if(playerSprite.judgeSprite.intersect(stationSprite)) {
         if(!playerSprite.sake) getSound.play();
         playerSprite.getSake();
         sakeIcon.visible = true;
       }
-      if(playerSprite.intersect(chanmariSprite) && playerSprite.sake ) {
+      if(playerSprite.judgeSprite.intersect(chanmariSprite) && playerSprite.sake ) {
         drinkSound.play();
         playerSprite.giveSake();
         sakeIcon.visible = false;
         let pandySprite = new Reflecting();
         pandySprite.image = core.assets['./img/pandy.png'];
         pandySprite.addEventListener('enterframe', function() {
-          if(pandySprite.judgeEntity.intersect(playerSprite)) {
+          if(pandySprite.judgeEntity.intersect(playerSprite.judgeSprite)) {
             core.replaceScene(scene[RESULT]);
           }
         });
@@ -296,6 +297,6 @@ window.onload = function() {
       }
     });
   };
-  core.start();
-  //core.debug();
+  //core.start();
+  core.debug();
 };

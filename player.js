@@ -12,6 +12,9 @@ let Player = Class.create(Sprite, {
     this.speed = 5;
 
     this.sake = false;
+
+    this.judgeSprite = new Sprite(30, 50);
+    this.judgeSprite.moveTo(this.x+10, this.y);
   },
 
   onenterframe: function() {
@@ -28,13 +31,22 @@ let Player = Class.create(Sprite, {
       this.x += this.speed;
     }
 
+    this.judgeSprite.moveTo(this.x+10, this.y);
+
+
     if(this.intersect(this.w1) || this.intersect(this.w2) ||
-       this.x < 0 || SIZE_X < this.x+this.width ||
-       this.y < 0 || SIZE_Y < this.y+this.height) {
+       this.x < 0 || SIZE_X < this.x+this.width) {
       this.x = this.bx;
+    } else {
+      if(this.bx < this.x) this.scaleX = -1;
+      if(this.bx > this.x) this.scaleX = 1;
+      this.bx = this.x;
+    }
+
+    if(this.intersect(this.w1) || this.intersect(this.w2) ||
+       this.y < 0 || SIZE_Y < this.y+this.height) {
       this.y = this.by;
     } else {
-      this.bx = this.x;
       this.by = this.y;
     }
   },
