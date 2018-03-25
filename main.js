@@ -101,6 +101,11 @@ window.onload = function() {
     rightWallSprite.moveTo(SAFE_X+PND_X, SAFE_Y);
     scene[GAME].addChild(rightWallSprite);
     
+    let midEntity = new Entity(SIZE_X, SIZE_Y);
+    midEntity.moveTo(0, 0);
+    midEntity.visible = false;
+    scene[GAME].addChild(midEntity);
+
     let stationSprite = new Sprite(SAFE_X, SAFE_Y);
     stationSprite.image = core.assets['./img/station.png'];
     stationSprite.moveTo(0, SIZE_Y-SAFE_Y);
@@ -224,6 +229,9 @@ window.onload = function() {
         });
         scene[GAME].addChild(pandySprite);
         scene[GAME].addChild(pandySprite.judgeEntity);
+
+        scene[GAME].insertBefore(pandySprite, midEntity);
+        scene[GAME].insertBefore(pandySprite.judgeEntity, midEntity);
 
         sakeCnt++;
         mood += 10;
