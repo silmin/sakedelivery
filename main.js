@@ -1,11 +1,14 @@
 enchant();
 
 const ASSETS = [
+  './img/title2.png',
   './img/sake.png',
   './img/hert.png',
   './img/sakeIcon.png',
   './img/speedup.png',
   './img/pandy.png',
+  './img/pandy2.png',
+  './img/pandy3.png',
   './img/station.png',
   './img/chanmari.png',
   './img/wall.png',
@@ -23,15 +26,25 @@ window.onload = function() {
     for(let i = 1; i <= SCENE; ++i) {
       scene[i] = new Scene();
     }
-
-    let topLabel = new Label();
-    topLabel.text = "top";
-    topLabel.width = 300;
-    topLabel.font = "15px 'meiryo'";
-    topLabel.moveTo(0, 0);
-    scene[TOP].addChild(topLabel);
     scene[TOP].addEventListener('touchstart', function() {
       core.replaceScene(scene[DESCRIPTION]);
+    });
+
+    scene[TOP].backgroundColor = '#f5deb3';
+    scene[RESULT].backgroundColor = '#f5deb3';
+
+    let titleSprite = new Sprite(600, 200);
+    titleSprite.image = core.assets['./img/title2.png'];
+    titleSprite.moveTo((SIZE_X-titleSprite.width)/2, (SIZE_Y-titleSprite.height)/2);
+    scene[TOP].addChild(titleSprite);
+    
+    let clickStartLabel = new Label("click start");
+    clickStartLabel.font = "30px 'meiryo'";
+    clickStartLabel.moveTo((core.width - clickStartLabel._boundWidth) / 2, 700 );
+    scene[TOP].addChild(clickStartLabel);
+
+    clickStartLabel.addEventListener('enterframe', function() {
+      clickStartLabel.opacity = (Math.cos(core.frame*2*Math.PI/180)+1)*0.5;
     });
 
     core.pushScene(scene[TOP]);
@@ -45,13 +58,6 @@ window.onload = function() {
     scene[DESCRIPTION].addEventListener('touchstart', function() {
       core.replaceScene(scene[GAME]);
     });
-
-    let gameLabel = new Label();
-    gameLabel.text = "game";
-    gameLabel.width = 300;
-    gameLabel.font = "15px 'meiryo'";
-    gameLabel.moveTo(0, 0);
-    scene[GAME].addChild(gameLabel);
 
     let backWall = new Sprite(SIZE_X, SIZE_Y);
     backWall.image = core.assets['./img/wall.png'];
@@ -195,22 +201,56 @@ window.onload = function() {
       sakeIcon.moveTo(playerSprite.x+30, playerSprite.y-10);
     });
 
-    let resultLabel = new Label();
-    resultLabel.text = "result";
-    resultLabel.width = 300;
-    resultLabel.font = "15px 'meiryo'";
-    resultLabel.moveTo(0, 0);
-    scene[RESULT].addChild(resultLabel);
+    let resultLabel = new Label("りざると");
+    resultLabel.font = "70px 'meiryo'";
+    resultLabel.width = 400;
+    resultLabel.moveTo((SIZE_X-resultLabel._boundWidth)/2, 250);
+
+    let resultSprite = new Sprite(200, 200);
+    resultSprite.moveTo((SIZE_X-resultSprite.width)/2, 400);
+
 
     let scoreLabel = new Label();
-    scoreLabel.width = 300;
-    scoreLabel.font = "15px 'meiryo'";
-    scoreLabel.moveTo(0, 100);
-    scene[RESULT].addChild(scoreLabel);
+    scoreLabel.font = "50px 'meiryo'";
+    scoreLabel.width = 350;
+    scoreLabel.moveTo((SIZE_X-scoreLabel._boundWidth)/2, 500);
 
+    let tweetLabel = new Label("ついーとする");
+    tweetLabel.font = "35px 'meiryo'";
+    tweetLabel.width = 220;
+    tweetLabel.moveTo((SIZE_X-tweetLabel._boundWidth)/2, 750 );
+
+    let returnLabel = new Label("もういっかいやる");
+    returnLabel.font = "35px 'meiryo'";
+    returnLabel.moveTo((SIZE_X-returnLabel._boundWidth)/2, 800 );
+
+    let myInfo = new Label("製作者: mina(Twitter: @silmin_)");
+    myInfo.font = "20px 'meiryo'";
+    myInfo.moveTo(10, SIZE_Y - 30);
+    scene[TOP].addChild(myInfo);
+
+    
+    returnLabel.addEventListener('touchstart', function() {
+      location.reload();
+    });
+
+    tweetLabel.addEventListener('touchstart', function() {
+      let EUC = encodeURIComponent;
+      let tweetUrl = "http://twitter.com/?status=";
+      let message = "かしこまりちゃんのファンゲーム【酒でりばりー】あなたのスコアは"+(sakeCnt*mood)+"でした！プレイしてくれてありがとう！ https://silmin.github.io/sakedelivery/ #酒でりばりー";
+
+      location.href = tweetUrl + EUC(message);
+    });
     scene[RESULT].addEventListener('enter', function() {
-      scoreLabel.text = '' + (sakeCnt*mood);
-      console.log(sakeCnt, mood);
+      scene[RESULT].addChild(tweetLabel);
+      scene[RESULT].addChild(returnLabel);
+      scene[RESULT].addChild(myInfo);
+      scene[RESULT].addChild(scoreLabel);
+      scene[RESULT].addChild(resultLabel);
+      scene[RESULT].addChild(resultSprite);
+      scoreLabel.text = 'Score: ' + (sakeCnt*mood);
+      scoreLabel.moveTo((SIZE_X-scoreLabel._boundWidth)/2, 500);
+      
     });
   };
   //core.start();
