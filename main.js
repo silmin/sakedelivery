@@ -52,7 +52,6 @@ window.onload = function() {
     scene[TOP].addEventListener('enter', function() {
       titleBgm.play();
       titleBgm.volume -= 0.8;
-      titleBgm._element.loop = true;
     });
 
     scene[TOP].backgroundColor = '#f5deb3';
@@ -171,7 +170,6 @@ window.onload = function() {
       titleBgm.stop();
       gameBgm.play();
       gameBgm.volume -= 0.8;
-      gameBgm._element.loop = true;
     });
 
     scene[GAME].addEventListener('enterframe', function() {
@@ -280,7 +278,6 @@ window.onload = function() {
     scene[RESULT].addEventListener('enter', function() {
       gameBgm.stop();
       titleBgm.play();
-      titleBgm._element.loop = true;
       scene[RESULT].addChild(tweetLabel);
       scene[RESULT].addChild(returnLabel);
       scene[RESULT].addChild(myInfo);
