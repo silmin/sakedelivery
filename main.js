@@ -259,9 +259,10 @@ window.onload = function() {
     returnLabel.font = "35px 'meiryo'";
     returnLabel.moveTo((SIZE_X-returnLabel._boundWidth)/2, 820 );
 
-    let myInfo = new Label("製作者: mina(Twitter: @silmin_)");
+    let myInfo = new Label("製作者: mina(Twitter: @silmin_)<br>自機イラスト: ヒヂノさん(Twitter: @hidinoise)");
     myInfo.font = "20px 'meiryo'";
-    myInfo.moveTo(10, SIZE_Y - 30);
+    myInfo.width = 500;
+    myInfo.moveTo(10, SIZE_Y - 70);
     scene[TOP].addChild(myInfo);
 
     
@@ -297,6 +298,6 @@ window.onload = function() {
       }
     });
   };
-  //core.start();
-  core.debug();
+  core.start();
+  //core.debug();
 };
