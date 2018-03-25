@@ -11,6 +11,7 @@ const ASSETS = [
   './img/pandy.png',
   './img/pandy2.png',
   './img/pandy3.png',
+  './img/pandy4.png',
   './img/station.png',
   './img/chanmari.png',
   './img/wall.png',
@@ -291,10 +292,12 @@ window.onload = function() {
 
       if(sakeCnt*mood < 400) {
         resultSprite.image = core.assets['./img/pandy.png'];
-      } else if( sakeCnt*mood < 700) {
+      } else if(sakeCnt*mood < 700) {
         resultSprite.image = core.assets['./img/pandy2.png'];
-      } else {
+      } else if(sakeCnt*mood < 1000) {
         resultSprite.image = core.assets['./img/pandy3.png'];
+      } else {
+        resultSprite.image = core.assets['./img/pandy4.png'];
       }
     });
   };
