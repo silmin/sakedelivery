@@ -2,6 +2,8 @@ enchant();
 
 const ASSETS = [
   './img/title2.png',
+  './img/description.png',
+  './img/player.png',
   './img/sake.png',
   './img/hert.png',
   './img/sakeIcon.png',
@@ -49,12 +51,10 @@ window.onload = function() {
 
     core.pushScene(scene[TOP]);
 
-    let descLabel = new Label();
-    descLabel.text = "description";
-    descLabel.width = 300;
-    descLabel.font = "15px 'meiryo'";
-    descLabel.moveTo(0, 0);
-    scene[DESCRIPTION].addChild(descLabel);
+    let descSprite = new Sprite(SIZE_X, SIZE_Y);
+    descSprite.moveTo(0, 0);
+    descSprite.image = core.assets['./img/description.png'];
+    scene[DESCRIPTION].addChild(descSprite);
     scene[DESCRIPTION].addEventListener('touchstart', function() {
       core.replaceScene(scene[GAME]);
     });
@@ -69,7 +69,7 @@ window.onload = function() {
     leftWallSprite.image = core.assets['./img/wall2.png'];
     leftWallSprite.moveTo(0, 0);
     scene[GAME].addChild(leftWallSprite);
-
+    
     let rightWallSprite = new Sprite(SAFE_X, SIZE_Y-SAFE_Y);
     rightWallSprite.image = core.assets['./img/wall2.png'];
     rightWallSprite.moveTo(SAFE_X+PND_X, SAFE_Y);
@@ -86,6 +86,7 @@ window.onload = function() {
     scene[GAME].addChild(chanmariSprite);
 
     let playerSprite = new Player(SAFE_X+100, SIZE_Y-70, core, leftWallSprite, rightWallSprite);
+    playerSprite.image = core.assets['./img/player.png'];
     scene[GAME].addChild(playerSprite);
 
     let sakeIcon = new Sprite(30, 30);
@@ -128,7 +129,7 @@ window.onload = function() {
     gaugeEntity.width = 30;
     gaugeEntity.height = -500;
     gaugeEntity.moveTo(SIZE_X-SAFE_X+(SAFE_X-gaugeEntity.width)/2, SIZE_Y - 100);
-    gaugeEntity.backgroundColor = '#adff2f';
+    gaugeEntity.backgroundColor = '#f0d001';
     scene[GAME].addChild(gaugeEntity);
 
     let sakeCnt = 0;
@@ -207,13 +208,11 @@ window.onload = function() {
     resultLabel.moveTo((SIZE_X-resultLabel._boundWidth)/2, 250);
 
     let resultSprite = new Sprite(200, 200);
-    resultSprite.moveTo((SIZE_X-resultSprite.width)/2, 400);
-
+    resultSprite.moveTo((SIZE_X-resultSprite.width)/2, 500);
 
     let scoreLabel = new Label();
     scoreLabel.font = "50px 'meiryo'";
     scoreLabel.width = 350;
-    scoreLabel.moveTo((SIZE_X-scoreLabel._boundWidth)/2, 500);
 
     let tweetLabel = new Label("ついーとする");
     tweetLabel.font = "35px 'meiryo'";
@@ -222,7 +221,7 @@ window.onload = function() {
 
     let returnLabel = new Label("もういっかいやる");
     returnLabel.font = "35px 'meiryo'";
-    returnLabel.moveTo((SIZE_X-returnLabel._boundWidth)/2, 800 );
+    returnLabel.moveTo((SIZE_X-returnLabel._boundWidth)/2, 820 );
 
     let myInfo = new Label("製作者: mina(Twitter: @silmin_)");
     myInfo.font = "20px 'meiryo'";
@@ -249,8 +248,15 @@ window.onload = function() {
       scene[RESULT].addChild(resultLabel);
       scene[RESULT].addChild(resultSprite);
       scoreLabel.text = 'Score: ' + (sakeCnt*mood);
-      scoreLabel.moveTo((SIZE_X-scoreLabel._boundWidth)/2, 500);
-      
+      scoreLabel.moveTo((SIZE_X-scoreLabel._boundWidth)/2, 400);
+
+      if(sakeCnt*mood < 500) {
+        resultSprite.image = core.assets['./img/pandy.png'];
+      } else if( sakeCnt*mood < 800) {
+        resultSprite.image = core.assets['./img/pandy2.png'];
+      } else {
+        resultSprite.image = core.assets['./img/pandy3.png'];
+      }
     });
   };
   //core.start();
