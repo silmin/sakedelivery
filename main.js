@@ -250,15 +250,15 @@ window.onload = function() {
       scoreLabel.text = 'Score: ' + (sakeCnt*mood);
       scoreLabel.moveTo((SIZE_X-scoreLabel._boundWidth)/2, 400);
 
-      if(sakeCnt*mood < 500) {
+      if(sakeCnt*mood < 400) {
         resultSprite.image = core.assets['./img/pandy.png'];
-      } else if( sakeCnt*mood < 800) {
+      } else if( sakeCnt*mood < 700) {
         resultSprite.image = core.assets['./img/pandy2.png'];
       } else {
         resultSprite.image = core.assets['./img/pandy3.png'];
       }
     });
   };
-  //core.start();
-  core.debug();
+  core.start();
+  //core.debug();
 };

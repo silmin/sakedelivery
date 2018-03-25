@@ -5,8 +5,8 @@ let Reflecting = Class.create(Sprite, {
     Sprite.call(this, 200, 200);
 
     this.moveTo(500, 700);
-    this.speedx = Math.floor(3+Math.random() * 5);
-    this.speedy = Math.floor(3+Math.random() * 5);
+    this.speedx = Math.floor(3+Math.random() * 4);
+    this.speedy = Math.floor(3+Math.random() * 4);
 
     this.judgeEntity = new Entity();
     this.judgeEntity.width = this.width * 0.6;
