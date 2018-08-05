@@ -268,7 +268,7 @@ window.onload = function() {
     returnLabel.font = "35px 'meiryo'";
     returnLabel.moveTo((SIZE_X-returnLabel._boundWidth)/2, 820 );
 
-    let myInfo = new Label("製作者:mina(Twitter: @silmin_)<br>自機イラスト:ヒヂノさん(Twitter: @hidinoise)");
+    let myInfo = new Label("製作者:mina(Twitter: @silmin_)<br><br>自機イラスト:ヒヂノさん(Twitter: @hidinoise)");
     myInfo.font = "15px 'meiryo'";
     myInfo.width = 500;
     myInfo.moveTo(10, SIZE_Y - 70);
